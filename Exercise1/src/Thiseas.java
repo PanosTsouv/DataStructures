@@ -21,8 +21,8 @@ public class Thiseas{
         //first move when we are at entrance
         //stack.peek().getI() and stack.peek().getJ() return the coords of entrance because current item is entrance
         //so we check if entrance is at first or last row or first or last column to avoid null pointer exception
-        //At these four cases we check if entrance have 0 right and left or up and down because if it has then it isnt labyrinth
-        //And if we find 0 we make move and chhose 0 to 1 else labyrinth dont have exit
+        //At these four cases we check if entrance has 0 right and left or up and down because if it has then it isnt labyrinth
+        //And if we find 0 we make move and choose 0 to 1 else labyrinth dont have exit
         //**pop before push is for entrance because we dont want to check it again **
         if(stack.peek().getI() == 0)
         {
