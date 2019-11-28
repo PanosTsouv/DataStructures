@@ -45,6 +45,7 @@ public class TxtRead{
                     }catch(IndexOutOfBoundsException e)
                     {
                         System.out.println("Array cords should have 2 elements(rows-columns) at first row of txt file");
+                        System.out.println("Check also if you have spaces at start of line or more than 1 space between elements");
                         System.exit(1);
                     }
                     //if second row don't have 2 elements,print the reason of an exception
@@ -57,6 +58,7 @@ public class TxtRead{
                     }catch(IndexOutOfBoundsException e)
                     {
                         System.out.println("E cords should have 2 elements(row-column) at second row or first row of txt file is missing");
+                        System.out.println("Check also if you have spaces at start of line or more than 1 space between elements");
                         System.exit(1);
                     }
                     coord = line.split(" ");
@@ -64,10 +66,15 @@ public class TxtRead{
                     //we save array's bounds
                     if (count == 1)
                     {
-                        rows = Integer.parseInt(coord[0]);
-                        columns = Integer.parseInt(coord[1]);
-                        inputArray = new String[rows][columns]; 
-                        temp = new String[columns];
+                        try{
+                            rows = Integer.parseInt(coord[0]);
+                            columns = Integer.parseInt(coord[1]);
+                            inputArray = new String[rows][columns]; 
+                            temp = new String[columns];
+                        }catch(NumberFormatException e){
+                            System.out.println("Coords should be numbers");
+                            System.exit(1);
+                        }
                     }
                     //we save entrance coords
                     if (count == 2)
@@ -90,7 +97,8 @@ public class TxtRead{
                         }
                     }catch(IndexOutOfBoundsException e)
                     {
-                        System.out.println("Array has wrong bounds or some elements don't seperate with spaces");
+                        System.out.println("Array has wrong bounds or");
+                        System.out.println("check also if you have spaces at start of line or more than 1 space between elements");
                         System.exit(1);
                     }
                     temp = line.split(" ");
