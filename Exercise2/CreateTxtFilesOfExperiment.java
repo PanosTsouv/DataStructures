@@ -15,14 +15,18 @@ public class CreateTxtFilesOfExperiment{
     {
         this.numberOfFilesCreate = 0;
     }
-
+    //@param i start from 0 to input user's numberOfFiles with specific number of forlders,become 0 when all files are created
+    //@param j start from 0 to input user's number of forlders,become 0 every time a file is created
+    //@param input user's numberOfFiles
+    //@param input user's n = number of folders
+    //@param flag is for header line
     public void createTxtFiles(StringBuilder path)
     {
         int n = 0;
         int numberOfFiles = 0;
         int i = 0;
         int j = 0;
-        int exit = 0;
+        int exit = 1;
         StringBuilder ret = new StringBuilder();
         String directory = path.append("Data").toString();
         String extension = ".txt";
@@ -34,10 +38,10 @@ public class CreateTxtFilesOfExperiment{
         Greedy greedy = new Greedy(false);
         List<Folder> currentFileList = new List<>();
         CreateCsvFile csvBuilder = new CreateCsvFile();
-        
+        //create Data folder if doesn't exit , and delete all old experiment's files if exist
         try {
 			File dir = new File(directory);
- 
+            dir.mkdir();
             for (File file : dir.listFiles()) {
                 if (file.getName().endsWith(extension) && !file.delete()) {
                     throw new IOException();
@@ -50,7 +54,7 @@ public class CreateTxtFilesOfExperiment{
         
         Scanner input = new Scanner(System.in);
 
-        while(exit == 0)
+        while(exit != 0)
         {
                 
             numberOfDisksAlg1 = 0;
@@ -75,6 +79,7 @@ public class CreateTxtFilesOfExperiment{
 
             while(i < numberOfFiles)
             {
+                //create experiment's files
                 currentNumberOfFilesCreate++;
                 ret.append(directory);
                 ret.append("/numberOfFolders_");
@@ -82,7 +87,6 @@ public class CreateTxtFilesOfExperiment{
                 ret.append("_");
                 ret.append(numberOfFilesCreate);
                 ret.append(".txt");
-                
                 try
                 {
                     FileWriter writer = new FileWriter(ret.toString(), false);
@@ -105,26 +109,30 @@ public class CreateTxtFilesOfExperiment{
                 {
                     e.printStackTrace();
                 }
+                //delete the value of String builder because i want to be empty fro the next file
                 ret.delete(0,  ret.length());
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
+                //run greedy algorithm without sort for a file of specific numbers of Files
                 greedy.greedyAlg(currentFileList.getHead());
                 numberOfDisksAlg1 = numberOfDisksAlg1 + greedy.getNumberOfDisks();
 
+                //run greedy algorithm without sort for a file of specific numbers of Files
                 currentFileList.sort();
                 greedy.greedyAlg(currentFileList.getHead());
                 numberOfDisksAlg2 = numberOfDisksAlg2 + greedy.getNumberOfDisks();
+                //remove all folder so when i create next file this list should be empty
                 while(!currentFileList.isEmpty())
                 {
                     currentFileList.remove();
                 }
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
+            //let user to stop or continue to create files
             while(true)
             {
                 input = new Scanner(System.in);
                 try
                 {
-                    System.out.println("press 0 to continue or 1 to stop");
+                    System.out.println("press 0 to stop");
                     exit = input.nextInt();
                     break;
                 }
@@ -134,6 +142,7 @@ public class CreateTxtFilesOfExperiment{
                 }
             }
             i = 0;
+            //create csv file,flag is for header line
             csvBuilder.createCsvFile(n, path, numberOfDisksAlg1, numberOfDisksAlg2, currentNumberOfFilesCreate, flag);
             flag = false;
         }
