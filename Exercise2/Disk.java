@@ -1,28 +1,43 @@
-import java.java.lang.Comparable;
+import java.lang.Comparable;
 
-public class Disk<T> implements Comparable<Disk>{
+public class Disk implements Comparable<Disk>{
     
-    private T diskId;
-    private List<T> folders;
-    private double freeSpace;
+    private int diskId;
+    private List<Folder> folders;
+    private int freeSpace;
 
     public Disk()
     {
-        this.disk = null;
-        this.folders = null;
+        this.diskId = 0;
+        this.folders = new List<>();
         this.freeSpace = 1000000;
     }
 
-    public Disk(T diskId)
+    public Disk(int diskId, int freeSpace)
     {
         this.diskId = diskId;
-        this.folders = null;
-        this.freeSpace = 1000000;
+        this.folders = new List<>();
+        this.freeSpace = freeSpace;
     }
 
-    public double getFreeSpace()
+    public int getFreeSpace()
     {
         return this.freeSpace;
+    }
+
+    public List<Folder> getFolders()
+    {
+        return this.folders;
+    }
+
+    public void setId(int diskId)
+    {
+        this.diskId = diskId;
+    }
+
+    public void setFreeSpace(int freeSpace)
+    {
+        this.freeSpace = freeSpace;
     }
 
     @Override
@@ -43,8 +58,7 @@ public class Disk<T> implements Comparable<Disk>{
     }
 
     public String toString()
-    {
-        return "ID: " + diskId + "->Space: " + freeSpace;
+    {   
+        return "id " + diskId + " " + freeSpace;
     }
-
 }
