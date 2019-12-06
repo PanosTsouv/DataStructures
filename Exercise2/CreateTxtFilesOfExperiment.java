@@ -19,7 +19,7 @@ public class CreateTxtFilesOfExperiment{
     //@param j start from 0 to input user's number of forlders,become 0 every time a file is created
     //@param input user's numberOfFiles
     //@param input user's n = number of folders
-    //@param flag is for header line
+    //@param flag is for header line,and csv file be created one time
     public void createTxtFiles(StringBuilder path)
     {
         int n = 0;
@@ -38,7 +38,7 @@ public class CreateTxtFilesOfExperiment{
         Greedy greedy = new Greedy(false);
         List<Folder> currentFileList = new List<>();
         CreateCsvFile csvBuilder = new CreateCsvFile();
-        //create Data folder if doesn't exit , and delete all old experiment's files if exist
+        //create Data folder if doesn't exist , and delete all old experiment's files if exist
         try {
 			File dir = new File(directory);
             dir.mkdir();
@@ -142,7 +142,7 @@ public class CreateTxtFilesOfExperiment{
                 }
             }
             i = 0;
-            //create csv file,flag is for header line
+            //create csv file,flag is for header line and csv file be created one time
             csvBuilder.createCsvFile(n, path, numberOfDisksAlg1, numberOfDisksAlg2, currentNumberOfFilesCreate, flag);
             flag = false;
         }
