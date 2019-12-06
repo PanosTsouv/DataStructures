@@ -1,4 +1,4 @@
-import java.java.lang.Comparable;
+import java.lang.Comparable;
 
 public class Folder implements Comparable<Folder> {
     private int folderSize;
