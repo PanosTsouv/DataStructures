@@ -1,16 +1,18 @@
-import java.io.PrintStream;
 import java.util.NoSuchElementException;
 
-public class List<T>{
+public class List<T extends Comparable<T>>{
 
     private Node<T> tail;
+    private Node<T> head;
     private int size;
 
     public List()
     {
+        this.head = null;
         this.tail = null;
         this.size = 0;
     }
+
     public boolean isEmpty()
     {
         return size == 0;
@@ -22,13 +24,14 @@ public class List<T>{
 
         if (isEmpty())
         {
-            current.setNext(current);
+            this.head = current;
+            this.tail = current;
         }
-        else{
-            current.setNext(this.tail.getNext());
-            this.tail.setNext(current);
+        else
+        {
+            current.setNext(this.head);
+            this.head = current;
         }
-        this.tail = current;
         this.size++;
     }
 
@@ -39,9 +42,16 @@ public class List<T>{
             throw new NoSuchElementException();
         }
 
-        T item = this.tail.getNext().getData();
+        T item = this.head.getData();
 
-        this.tail.setNext(this.tail.getNext().getNext());
+        if(this.head == this.tail)
+        {
+            this.head = this.tail = null;
+        }
+        else
+        {
+            this.head = this.head.getNext();
+        }
         this.size--;
         return item;
     }
@@ -51,13 +61,21 @@ public class List<T>{
         return this.size;
     }
 
+    public Node<T> getHead(){
+        return this.head;
+    }
+
     public Node<T> getTail(){
         return this.tail;
     }
 
-    public void setTail(Node<T> tail)
+    public void setHead(Node<T> head)
     {
-        this.tail = tail;
+        this.head = head;
+        if (this.size == 0)
+        {
+            this.size++;
+        }
     }
 
     public String toString() 
@@ -67,23 +85,20 @@ public class List<T>{
             return "List is empty";
         }
 
-        Node current = tail.getNext();
+        Node<T> current = this.head;
 
         StringBuilder ret = new StringBuilder();
-
-        int i = 0;
 
         // while not at end of list, output current node's data
         ret.append("HEAD -> ");
 
-        while (i != this.size()) {
-            ret.append(current.data.toString());
+        while (current != null) {
+            ret.append(current.getData().toString());
 
-            if (i != this.size()-1)
+            if (current.getNext() != null)
                 ret.append(" -> ");
 
             current = current.getNext();
-            i++;
         }
 
         ret.append(" <- TAIL");
@@ -91,8 +106,51 @@ public class List<T>{
         return ret.toString();
     }
 
+    public void sort() {
+        // No need to sort if list is empty or has a single element
+        if (head == null || head == tail)
+            return;
 
+        Node<T> newHead = null;
+        Node<T> newTail = null;
 
+        while (head != null) {
+            // get next item
+            Node<T> tmp = head;
 
+            // move head
+            head = head.getNext();
 
+            // move swap to new-sorted list
+            if (newHead == null) {
+                newHead = newTail = tmp;
+                tmp.setNext(null);
+            } else {
+                Node<T> prev = null;
+                Node<T> iterator = newHead;
+
+                // iterate newList until we get to a point where our data is smaller or reach the end
+                while (iterator != null && iterator.getData().compareTo(tmp.getData()) >= 0) {
+                    prev = iterator;
+                    iterator = iterator.getNext();
+                }
+
+                // reached the point where we should place the node
+
+                // if prev == null then its the head of the list
+                if (prev == null)
+                    newHead = tmp;
+                else
+                    prev.setNext(tmp);
+
+                // if iterator == null then its the tail of the list
+                tmp.setNext(iterator);
+                if(iterator == null)
+                    newTail = tmp;
+            }
+        }
+
+        head = newHead;
+        tail = newTail;
+    }
 }
