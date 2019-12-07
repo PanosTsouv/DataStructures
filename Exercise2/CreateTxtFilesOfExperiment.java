@@ -28,8 +28,9 @@ public class CreateTxtFilesOfExperiment{
         int j = 0;
         int exit = 1;
         StringBuilder ret = new StringBuilder();
-        String directory = path.append("Data").toString();
+        String directory;
         String extension = ".txt";
+        String extension1 = ".csv";
         int randomNumber;
         int numberOfDisksAlg1 = 0;
         int numberOfDisksAlg2 = 0;
@@ -38,20 +39,29 @@ public class CreateTxtFilesOfExperiment{
         Greedy greedy = new Greedy(false);
         List<Folder> currentFileList = new List<>();
         CreateCsvFile csvBuilder = new CreateCsvFile();
-        //create Data folder if doesn't exist , and delete all old experiment's files if exist
+        ReadCsvFile csvReader = new ReadCsvFile();
+        int countN = 0;
+        //create Data folder if doesn't exist , and delete all old experiment's files if exist and results.csv
         try {
-			File dir = new File(directory);
-            dir.mkdir();
+            File dir = new File(path.toString());
             for (File file : dir.listFiles()) {
+                if (file.getName().endsWith(extension1) && !file.delete()) {
+                    throw new IOException();
+                }
+            }
+            directory = path.append("Data").toString();
+			File dir1 = new File(directory);
+            dir.mkdir();
+            for (File file : dir1.listFiles()) {
                 if (file.getName().endsWith(extension) && !file.delete()) {
                     throw new IOException();
                 }
             }
 		} catch (IOException e) {
-			System.out.println("Problem occurs when deleting files");
+            System.out.println("Problem occurs when deleting files");
+            directory = path.append("Data").toString();
 			e.printStackTrace();
         }
-        
         Scanner input = new Scanner(System.in);
 
         while(exit != 0)
@@ -60,6 +70,7 @@ public class CreateTxtFilesOfExperiment{
             numberOfDisksAlg1 = 0;
             numberOfDisksAlg2 = 0;
             currentNumberOfFilesCreate = 0;
+            //user give number of Folders,and read csv file-check if user have given 3 diffeent numbers and maxDifference
             while(true)
             {
                 input = new Scanner(System.in);
@@ -67,9 +78,47 @@ public class CreateTxtFilesOfExperiment{
                 {
                     System.out.println("Give the number of Folders");
                     n = input.nextInt();
+                    if(n >= 0)
+                    {
+                        if (countN >= 1){
+                            csvReader.readCsvFile(path, n);
+                        }
+                        
+                        if (csvReader.getExist())
+                        {
+                            if (countN <= 3)
+                            {
+                                countN++;
+                            }
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println("Number of Folders can't be negative number");
+                    }
+                }
+                catch (InputMismatchException e)
+                {
+                    System.out.println("Wrong number format");
+                }
+            }
+            //user give number of Files
+            while(true && csvReader.getExist())
+            {
+                input = new Scanner(System.in);
+                try
+                {
                     System.out.println("Give the number of Files");
                     numberOfFiles = input.nextInt();
-                    break;
+                    if(numberOfFiles >= 10)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println("Number of Files should be at least 10");
+                    }
                 }
                 catch (InputMismatchException e)
                 {
@@ -77,7 +126,7 @@ public class CreateTxtFilesOfExperiment{
                 }
             }
 
-            while(i < numberOfFiles)
+            while(i < numberOfFiles && csvReader.getExist())
             {
                 //create experiment's files
                 currentNumberOfFilesCreate++;
@@ -126,15 +175,26 @@ public class CreateTxtFilesOfExperiment{
                     currentFileList.remove();
                 }
             }
-            //let user to stop or continue to create files
-            while(true)
+            //let user to stop or continue to create files,user should be add at least 3 different number of folders and maxDifference>=1000
+            while(true && csvReader.getExist())
             {
                 input = new Scanner(System.in);
                 try
                 {
-                    System.out.println("press 0 to stop");
+                    System.out.println("press 0 to stop-or other number to continue");
                     exit = input.nextInt();
-                    break;
+                    if (countN < 3 && csvReader.maxDifference() && exit == 0)
+                    {
+                        System.out.println("You should create files for 3 different number of Folders to run the experiment");
+                    }
+                    else if (csvReader.maxDifference() && exit == 0)
+                    {
+                        System.out.println("Max range of min-max number of Folder should be at least 1000");
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
                 catch (InputMismatchException e)
                 {
@@ -143,8 +203,14 @@ public class CreateTxtFilesOfExperiment{
             }
             i = 0;
             //create csv file,flag is for header line and csv file be created one time
-            csvBuilder.createCsvFile(n, path, numberOfDisksAlg1, numberOfDisksAlg2, currentNumberOfFilesCreate, flag);
-            flag = false;
+            if(csvReader.getExist()){
+                csvBuilder.createCsvFile(n, path, numberOfDisksAlg1, numberOfDisksAlg2, currentNumberOfFilesCreate, flag);
+                flag = false;
+            }
+            else
+            {
+                System.out.println("You use again this number of Folders");
+            }
         }
         input.close();
     }
