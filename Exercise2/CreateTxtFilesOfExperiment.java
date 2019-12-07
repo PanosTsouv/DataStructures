@@ -183,11 +183,11 @@ public class CreateTxtFilesOfExperiment{
                 {
                     System.out.println("press 0 to stop-or other number to continue");
                     exit = input.nextInt();
-                    if (countN < 3 && csvReader.maxDifference() && exit == 0)
+                    if (countN < 3 && csvReader.getMaxDifference() && exit == 0)
                     {
                         System.out.println("You should create files for 3 different number of Folders to run the experiment");
                     }
-                    else if (csvReader.maxDifference() && exit == 0)
+                    else if (csvReader.getMaxDifference() && exit == 0)
                     {
                         System.out.println("Max range of min-max number of Folder should be at least 1000");
                     }
