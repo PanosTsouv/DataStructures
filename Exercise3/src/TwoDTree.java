@@ -195,30 +195,29 @@ public class TwoDTree{
         return nearestPoint;
     }
 
-    private void print2dTree(TreeNode<Point> node, int space)  
-    {  
-        if (node == null) 
+    private void print2dTree(TreeNode<Point> node, int space)
+    {
+        if (node == null)
         {
             return;
         }
-    
-        space += COUNT;  
-    
-        print2dTree(node.getRight(), space);  
-    
-        System.out.print("\n");  
+
+        space += COUNT;
+
+        print2dTree(node.getRight(), space);
+
+        System.out.print("\n");
         for (int i = COUNT; i < space; i++)
         {
             System.out.print(" ");
-        } 
-        System.out.print(node.getData() + "(" + node.getLevel() + ")" + "\n");  
-    
-        print2dTree(node.getLeft(), space);  
-    } 
-     
-    public void print2D(TreeNode<Point> head)  
-    {  
-        // Pass initial space count as 0
-        print2dTree(head, 0);  
+        }
+        System.out.print(node.getData() + "(" + node.getLevel() + ")" + "\n");
+
+        print2dTree(node.getLeft(), space);
+    }
+
+    public void print2D(TreeNode<Point> head)
+    {
+        print2dTree(head, 0);
     }
 }
