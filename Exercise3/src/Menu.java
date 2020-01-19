@@ -77,9 +77,16 @@ public class Menu{
                 Point tempY = userPoint(input);
                 Rectangle temp = new Rectangle(tempX.getX(), tempX.getY(), tempY.getX(), tempY.getY());
                 System.out.println("Your query rectangle is: " + temp);
-                System.out.println("Your query rectangle contains the points below: ");
                 StringQueueWithOnePointer<Point> queue = this.userInput.rangeSearch(temp);
-                queue.printQueue(System.out);
+                if(!queue.isEmpty())
+                {
+                    System.out.println("Your query rectangle contains the points below: ");
+                    queue.printQueue(System.out);
+                }
+                else
+                {
+                    System.out.println("Your query rectangle doesn't contains points");
+                }
                 System.out.println();
             }
             if(inputNumber == 5)
@@ -140,7 +147,7 @@ public class Menu{
             }
             catch(NumberFormatException e)
             {
-                System.out.println("Coords should be numbers 0-100. Try again!");
+                System.out.println("Coords should be integer numbers 0-100. Try again!");
             }
         }
         return inputPoint;
